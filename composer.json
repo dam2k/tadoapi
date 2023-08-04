@@ -1,0 +1,23 @@
+{
+    "name": "dam2k/tadoapi",
+    "description": "TadoApi is an unofficial TADO (tm) SDK implementation for PHP (only read only methods)",
+    "version": "0.9",
+    "minimum-stability": "stable",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Dino Ciuffetti",
+            "role": "Developer",
+            "email": "dino@tuxweb.it",
+            "homepage": "https://dino.ciuffetti.info/"
+        }
+    ],
+    "autoload": {
+        "psr-4": { "dAm2K\\": ["src/"] }
+    },
+    "require": {
+        "league/oauth2-client": "^2.7",
+        "firebase/php-jwt": "^6.8"
+    }
+}
