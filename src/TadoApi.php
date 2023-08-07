@@ -6,7 +6,7 @@
  * NOTE: TadoApi is an unofficial TADO (tm) SDK implementation for PHP (only read only methods). It's a cool way to export metrics from your thermostats.
  *
  * TADO (tm) does not support its public api in no way. I get the api methods from a tado knowledgebase public post.
- * Also, thank to this post: https://shkspr.mobi/blog/2019/02/tado-api-guide-updated-for-2019/
+ * Also, thank to this post: https://shkspr.mobi/blog/2019/02/tado-api-guide-updated-for-2019/ and https://blog.scphillips.com/posts/2017/01/the-tado-api-v2/
  * It's working for me, may be this is also ok for you. Like any other open source software, the author cannot assume any warranty.
  */
 declare(strict_types=1);
@@ -84,7 +84,9 @@ class TadoApi
 		$options['headers']['content-type'] = 'application/json';
 		$request = $this->provider->getAuthenticatedRequest($method, $url, $this->access_token, $options);
 		$response = $this->client->send($request);
-		return json_decode($response->getBody()->getContents());
+		$responseContents=$response->getBody()->getContents();
+		if(empty($responseContents)) return [];
+		return json_decode($responseContents);
 	}
 
 	public function __construct(array $config, string $access_token = "")
@@ -186,9 +188,9 @@ class TadoApi
 		return $this->getData('GET', self::TADO_MYAPI_BASEURI . 'homes/' . (!empty($homeId) ? $homeId : $this->homeId) . '/zones/' . $zoneId . '/schedule/awayConfiguration');
 	}
 
-	public function identifyDevice(string $homeId = "", string $deviceId): \stdClass
+	public function identifyDevice(string $deviceId): void
 	{
-		return $this->getData('GET', self::TADO_MYAPI_BASEURI . 'homes/' . (!empty($homeId) ? $homeId : $this->homeId) . '/devices/' . $deviceId . '/identify');
+		$this->getData('POST', self::TADO_MYAPI_BASEURI . 'devices/' . $deviceId . '/identify');
 	}
 
 	public function getTemperatureOffset(string $homeId = "", string $deviceId): \stdClass
