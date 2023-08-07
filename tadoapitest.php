@@ -44,5 +44,6 @@ $tado = new TadoApi($tadoconf);
 //$o=$tado->getZoneScheduleAway("", "7");
 //$o=$tado->getHomeState();
 //$o=$tado->isAnyoneAtHome();
+//$tado->identifyDevice("RU0123456789");
 $o = $tado->getHomeMetrics();
 print_r(json_encode($o));
