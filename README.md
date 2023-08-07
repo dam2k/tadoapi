@@ -59,5 +59,5 @@ print_r(json_encode($o));
 ```
 # No official support
 TADO (tm) does not support its public api in no way. I get the api methods from a tado knowledgebase public post.
-Also, thank to this post: https://shkspr.mobi/blog/2019/02/tado-api-guide-updated-for-2019/
+Also, thank to this post: https://shkspr.mobi/blog/2019/02/tado-api-guide-updated-for-2019/ and https://blog.scphillips.com/posts/2017/01/the-tado-api-v2/
 
