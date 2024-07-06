@@ -1,7 +1,7 @@
 {
     "name": "dam2k/tadoapi",
     "description": "TadoApi is an unofficial TADO (tm) SDK implementation for PHP (only read only methods)",
-    "version": "0.9.2",
+    "version": "1.0.1",
     "minimum-stability": "stable",
     "type": "library",
     "license": "MIT",
