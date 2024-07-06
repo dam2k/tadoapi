@@ -1,5 +1,8 @@
 # tadoapi
-TadoApi is an unofficial TADO (tm) SDK implementation for PHP. I implemented this as a metrics exporter, so at this time I only implemented readonly methods, so you cannot change your thermostat temperature.
+TadoApi is an unofficial TADO (tm) SDK implementation for PHP. I implemented this as a metrics exporter, but you could change your thermostat or AC temperature, for example, writing your overlay and setting data with setZoneOverlay() method:
+```
+$tado->setZoneOverlay("", "8", '{"type":"MANUAL","setting":{"type":"AIR_CONDITIONING","power":"ON","mode":"COOL","temperature":{"celsius":25},"fanLevel":"LEVEL2","verticalSwing":"OFF"}}');
+```
 
 It's working for me, may be this is also ok for you. Like any other open source software, the author cannot assume any warranty.
 # Installation
@@ -35,6 +38,7 @@ public function getTemperatureOffset(string $homeId = "", string $deviceId): \st
 public function getHomeState(string $homeId = ""): \stdClass
 public function isAnyoneAtHome(string $homeId = ""): bool
 public function getHomeMetrics(string $homeId = ""): \stdClass
+public function setZoneOverlay(string $homeId = "", string $zoneId, string $data): \stdClass
 ```
 # Example of usage
 ```
