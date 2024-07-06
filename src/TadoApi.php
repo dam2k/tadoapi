@@ -89,6 +89,18 @@ class TadoApi
 		return json_decode($responseContents);
 	}
 
+	private function setData(string $method, string $url, string $data): \stdClass|array
+	{
+		$this->renewAccessTokenIfNeeded();
+		$options['headers']['content-type'] = 'application/json';
+		$options['body']=$data;
+		$request = $this->provider->getAuthenticatedRequest($method, $url, $this->access_token, $options);
+		$response = $this->client->send($request);
+		$responseContents=$response->getBody()->getContents();
+		if(empty($responseContents)) return [];
+		return json_decode($responseContents);
+	}
+
 	public function __construct(array $config, string $access_token = "")
 	{
 		$this->config = $config;
@@ -176,6 +188,11 @@ class TadoApi
 	public function getZoneOverlay(string $homeId = "", string $zoneId): \stdClass
 	{
 		return $this->getData('GET', self::TADO_MYAPI_BASEURI . 'homes/' . (!empty($homeId) ? $homeId : $this->homeId) . '/zones/' . $zoneId . '/overlay');
+	}
+
+	public function setZoneOverlay(string $homeId = "", string $zoneId, string $data): \stdClass
+	{
+		return $this->setData('PUT', self::TADO_MYAPI_BASEURI . 'homes/' . (!empty($homeId) ? $homeId : $this->homeId) . '/zones/' . $zoneId . '/overlay', $data);
 	}
 
 	public function getZoneScheduleActiveTimetable(string $homeId = "", string $zoneId): \stdClass
