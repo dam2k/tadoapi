@@ -46,22 +46,26 @@ use dAm2K\TadoApi;
 require "vendor/autoload.php";
 
 $tadoconf = [
-    // Tado client ID and secret from https://my.tado.com/webapp/env.js
-    'tado.clientId' => 'tado-web-app',
-    'tado.clientSecret' => 'taG9tXxzGrIFWixUT1nZnzIjlovENGe0KNAB51ADKZQjSlNBvhs0xbT6tC4jIUaC',
-    'tado.username' => 'yourtadoemail@email.com',
-    'tado.password' => 'yourtadopassporcoziochenotiziamacomelhamessadentroguarda',
-    // your home's ID
-    'tado.homeid' => '36389',
-    // we put access token here. When the AT expires a new one get collected and saved here
-    'statefile' => '/tmp/dam2ktado_aeSh8aem.txt' 
+	// this is the uuid they require: https://support.tado.com/en/articles/8565472-how-do-i-authenticate-to-access-the-rest-api
+	'tado.clientId' => '1bb50063-6b0c-4d11-bd99-387f4a91cc46',
+	'tado.homeid' => '36389', // your home's ID.
+	'statefile' => '/tmp/dam2ktado_aeSh8aem.txt' // we put device code, access and refresh tokens here. On expiration, new tokens are saved here
 ];
 
 $tado = new TadoApi($tadoconf);
+
 $o = $tado->getHomeMetrics();
 print_r(json_encode($o));
 ```
+
 # No official support
 TADO (tm) does not support its public api in no way. I get the api methods from a tado knowledgebase public post.
 Also, thank to this post: https://shkspr.mobi/blog/2019/02/tado-api-guide-updated-for-2019/ and https://blog.scphillips.com/posts/2017/01/the-tado-api-v2/
 
+# Device code grant flow
+NOTE: TADO requested all its unofficial REST API users to change the authentication method for security reasons.
+This library implements the new device code grant flow with automatic refresh token and access token handling.
+By design of how the auth scheme works, the first time, you need to authenticate with your tado credentials using your browser.
+At this time this API will put the required url on STDERR, I'll work on a log implementation on my spare time.
+
+For more informations, please check their official post: https://support.tado.com/en/articles/8565472-how-do-i-authenticate-to-access-the-rest-api
