@@ -86,8 +86,9 @@ class TadoApi
 	 */
 	private function getDeviceCode(): void {
 		$cd = new \DateTimeImmutable('now', new \DateTimeZone(date_default_timezone_get()));
+		$cd->add(new \DateInterval('PT1S')); // add one second
 		if(!empty($this->device_code) && !empty($this->device_code_expires && !empty($this->device_code_retry_interval))) { // device code got from the state file
-			if($cd < $this->device_code_expires) { // device code has NOT expired
+			if($cd <= $this->device_code_expires) { // device code has NOT expired
 				return;
 			} // device code expired before user auth. Request another one
 		}
@@ -118,8 +119,9 @@ class TadoApi
 	 */
 	private function getAccessToken(): void {
 		$cd = new \DateTimeImmutable('now', new \DateTimeZone(date_default_timezone_get()));
+		$cd->add(new \DateInterval('PT1S')); // add one second
 		if(!empty($this->access_token) && !empty($this->refresh_token) && !empty($this->access_token_expires)) { // got access token from the state file
-                        if($cd < $this->access_token_expires) { // access token has NOT expired
+                        if($cd <= $this->access_token_expires) { // access token has NOT expired
 				// we hope that the access token is valid, because it's not expired
                                 return;
                         } // access token expired. Request a new access token with the refresh token, hoping the refresh token it's still valid
