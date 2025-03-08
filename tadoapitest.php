@@ -24,7 +24,7 @@ $tadoconf = [
 	// this is the uuid they require: https://support.tado.com/en/articles/8565472-how-do-i-authenticate-to-access-the-rest-api
 	'tado.clientId' => '1bb50063-6b0c-4d11-bd99-387f4a91cc46',
 	'tado.homeid' => '36389', // your home's ID.
-	'statefile' => '/tmp/dam2ktado_aeSh8aem.txt' // we put device code, access and refresh tokens here. On expiration, new tokens are saved here
+	'statefile' => '/var/tmp/dam2ktado_aeSh8aem.txt' // we put device code, access and refresh tokens here. On expiration, new tokens are saved here
 ];
 
 $tado = new TadoApi($tadoconf);
