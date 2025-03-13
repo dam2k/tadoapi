@@ -64,6 +64,8 @@ class TadoApi
 		$this->getAccessToken();
 		$options['headers']['content-type'] = 'application/json';
 		$options['headers']['Authorization'] = 'Bearer '.$this->access_token;
+		$options['timeout'] = 5; // Response timeout
+		$options['connect_timeout'] = 5; // Connection timeout
 		$response = $this->client->request($method, $url, $options);
 		$responseContents=$response->getBody()->getContents();
 		if(empty($responseContents)) return [];
@@ -74,6 +76,8 @@ class TadoApi
 		$this->getAccessToken();
 		$options['headers']['content-type'] = 'application/json';
 		$options['headers']['Authorization'] = 'Bearer '.$this->access_token;
+		$options['timeout'] = 5; // Response timeout
+		$options['connect_timeout'] = 5; // Connection timeout
 		$options['body']=$data;
 		$response = $this->client->request($method, $url, $options);
 		$responseContents=$response->getBody()->getContents();
@@ -86,7 +90,6 @@ class TadoApi
 	 */
 	private function getDeviceCode(): void {
 		$cd = new \DateTimeImmutable('now', new \DateTimeZone(date_default_timezone_get()));
-		$cd->add(new \DateInterval('PT1S')); // add one second
 		if(!empty($this->device_code) && !empty($this->device_code_expires && !empty($this->device_code_retry_interval))) { // device code got from the state file
 			if($cd->getTimestamp() < $this->device_code_expires->getTimestamp()) { // device code has NOT expired
 				return;
@@ -97,7 +100,10 @@ class TadoApi
 			'form_params' => [
 				'client_id' => $this->config['tado.clientId'],
 				'scope'     => 'offline_access',
-			],
+			], [
+				'timeout' => 5, // Response timeout
+				'connect_timeout' => 5, // Connection timeout
+			]
 		]);
 		
 		/* {"device_code":"ftcrinX_KQNXUNI1wkh-5zxMmmYOUug43SAYWORssAU","expires_in":300,"interval":5,"user_code":"9HBZPZ","verification_uri":"https://login.tado.com/oauth2/device","verification_uri_complete":"https://login.tado.com/oauth2/device?user_code=9HBZPZ"} */
@@ -119,7 +125,6 @@ class TadoApi
 	 */
 	private function getAccessToken(): void {
 		$cd = new \DateTimeImmutable('now', new \DateTimeZone(date_default_timezone_get()));
-		$cd->add(new \DateInterval('PT1S')); // add one second
 		if(!empty($this->access_token) && !empty($this->refresh_token) && !empty($this->access_token_expires)) { // got access token from the state file
                         if($cd->getTimestamp() < $this->access_token_expires->getTimestamp()) { // access token has NOT expired
 				// we hope that the access token is valid, because it's not expired
@@ -130,8 +135,12 @@ class TadoApi
 					'client_id' => $this->config['tado.clientId'],
 					'grant_type' => 'refresh_token',
 					'refresh_token' => $this->refresh_token
-				],
+				], [
+					'timeout' => 5, // Response timeout
+					'connect_timeout' => 5, // Connection timeout
+				]
 			]);
+			// TODO: handle case where refresh token is not valid: invalid_grant
 			$data = json_decode($response->getBody()->getContents(), true);
 			if (isset($data['access_token'])) {
 				$this->access_token=$data['access_token'];
